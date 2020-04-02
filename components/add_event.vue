@@ -5,7 +5,7 @@
 			<text class="iconfont icon-add" :class="{'add_open':show}"></text>
 		</view>
 		<view class="add-todo-content" :class="{'content_open':show}">
-			<input class="add-input" focus="true" placeholder="请输入你的todo事项" v-model="content" v-if="show"/>
+			<input class="add-input" placeholder="请输入你的todo事项" v-model="content"/>
 			<view class="add-button" @click="createvent">
 				创建
 			</view>
@@ -35,6 +35,35 @@
 						content: this.content,
 						id: new Date().getTime(),
 						done: false
+					})
+					var _this = this.$root
+					uni.request({
+						url: "http://172.81.204.128/event",
+						method: "POST",
+						data: {
+							usr: getApp().globalData.usr,
+							pwd: getApp().globalData.pwd,
+							method: "post",
+							eventlis: {
+								"content": _this.list[0].content,
+								"id": _this.list[0].id,
+								"done": _this.list[0].done
+							}
+						},
+						success: (res) => {
+							if(res.status === 1) {
+								uni.showToast({
+									title: "云端同步成功~",
+									icon: "none"
+								})
+							}
+						},
+						fail(res) {
+							uni.showToast({
+								title: "哟呵云端同步失败~",
+								icon: "none"
+							})
+						}
 					})
 					this.content = ''
 				}

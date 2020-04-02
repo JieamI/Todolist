@@ -1,8 +1,7 @@
 <template>
 	<view class="content">
 		<!-- 状态栏组件 -->
-		<!-- <image src="../../static/sky.jpg" mode="aspectFill"></image> -->
-		<view class="background" @touchmove="handleMove" @touchstart="handleStart" @touchend="handlEnd"></view>
+		<view class="background" @click="handleClick" @touchstart="handleStart" @touchend="handleEnd"></view>
 		<view class="header">
 			<view class="header-left">
 				<text class="active-content">{{tab_text}}</text>
@@ -17,7 +16,7 @@
 		<!-- 事项显示组件 -->
 		<show_event v-model="tab_num"></show_event>
 		<!-- 添加事项组件 -->
-		<add_event></add_event>
+		<add_event ref="addEvent"></add_event>
 	</view>
 </template>
 
@@ -37,8 +36,71 @@
 				list: [],
 				lastX: 0,
 				lastY: 0,
+				scroll: false,
 				direction: ''
 			}
+		},
+		onLoad() {
+			uni.request({
+				url: getApp().globalData.url + "course",
+				method: "POST",
+				data: {
+					usr: getApp().globalData.usr,
+					pwd: getApp().globalData.pwd
+				},
+				success: (res) => {
+					if(res['data']['data']) {
+						var Day_lis = ["Sun", "Mon", "Tus", "Wed", "Thu", "Fri", "Sat"]
+						var course_lis = res.data.data[Day_lis[new Date().getDay()]]
+						course_lis.forEach((item,index) => {
+							if(item) {
+								this.list.push({
+									content: item,
+									id: index.toString() + new Date().getDay(),
+									done: false
+								})
+							}
+						})
+						uni.showToast({
+							title: "课表获取成功,今天也是爱你的一天~",
+							icon: "none"
+						})
+					}
+				},
+				fail(res) {
+					uni.showToast({
+						title: "哟呵,课表获取失败~",
+						icon: "none"
+					})
+				}
+			})
+			uni.request({
+				url: getApp().globalData.url + "event",
+				method: "POST",
+				data: {
+					usr: getApp().globalData.usr,
+					pwd: getApp().globalData.pwd,
+					method: "get"
+				},
+				success: (res) => {
+					var eventlis = res.data.eventlis
+					if(eventlis) {
+						eventlis.forEach((item) => {
+							this.list.push(item)
+						})
+						uni.showToast({
+							title: "事项获取成功,今天也是爱你的一天~",
+							icon: "none"
+						})
+					}
+				},
+				fail(res) {
+					uni.showToast({
+						title: "哎呀事项获取失败了~",
+						icon: "none"
+					})
+				}
+			})
 		},
 		methods: {
 			SwitchTab(index) {
@@ -53,34 +115,36 @@
 					this.tab_text = '已完成'
 				}
 			},
-			handleMove(event) {
-				let currentX = event.changedTouches[0].pageX;
-				let currentY = event.changedTouches[0].pageY;
-				if(currentX - this.lastX > 0) {
-					this.direction = 'right'
-				}
-				else{
-					this.direction = 'left'
-				}
-			},
 			handleStart(event) {
 				this.lastX = event.changedTouches[0].pageX;
 				this.lastY = event.changedTouches[0].pageY;
 			},
-			handlEnd() {
-				if(this.direction === 'right') {
-					switch(this.ActieIndex) {
-						case(0): this.ActieIndex = 2;break;
-						case(1): this.ActieIndex = 0;break;
-						case(2): this.ActieIndex = 1;break;
+			handleEnd(event) {
+				let currentX = event.changedTouches[0].pageX;
+				let currentY = event.changedTouches[0].pageY;
+				if(Math.abs(currentY - this.lastY) < 30) {
+					console.log(currentX)
+					console.log(this.lastX)
+					if(currentX - this.lastX > 5) {
+						switch(this.ActieIndex) {
+							case(0): this.ActieIndex = 2;break;
+							case(1): this.ActieIndex = 0;break;
+							case(2): this.ActieIndex = 1;break;
+						}
+					}
+					else if(currentX - this.lastX < -5) {
+						switch(this.ActieIndex) {
+							case(0): this.ActieIndex = 1;break;
+							case(1): this.ActieIndex = 2;break;
+							case(2): this.ActieIndex = 0;break;
+						}
 					}
 				}
-				else if(this.direction === 'left') {
-					switch(this.ActieIndex) {
-						case(0): this.ActieIndex = 1;break;
-						case(1): this.ActieIndex = 2;break;
-						case(2): this.ActieIndex = 0;break;
-					}
+				
+			},
+			handleClick() {
+				if(this.$refs.addEvent.show) {
+					this.$refs.addEvent.show = false
 				}
 			}
 		}
@@ -102,14 +166,14 @@
 		align-items: center
 		justify-content: space-between
 		position: fixed
-		top: 44px
+		top: 0
 		left: 0
 		box-sizing border-box
 		z-index 10
 		width 100%
 		font-size 14px
 		padding 0 10px
-		height 45px
+		height 50px
 		color #C0C0C0
 		background #ffffff
 		box-shadow -2px 2px 10px 2px #cccccc
@@ -123,4 +187,5 @@
 			padding-right 5px
 			font-size 14px
 			color  #52a6fe
+			
 </style>

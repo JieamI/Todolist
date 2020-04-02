@@ -1,6 +1,8 @@
 <template>
-	<view class="todo-list">
-		<view :class="{'todo-content': true, 'done-content': item.done}" v-for="item in ListData" :key="item.id" @click="switch_status(item.id)">
+	<view class="todo-list" @touchstart="handleStart" 
+							@touchend="handlEnd">
+		<view :class="{'todo-content': true, 'done-content': item.done}" v-for="item in ListData" :key="item.id" 
+		@click="switch_status(item.id)">
 			<view class="todo-checkbox"></view>
 			<view class="todo-text">{{item.content}}</view>
 		</view>
@@ -46,8 +48,27 @@
 		methods: {
 			// switch todo/done
 			switch_status(id) {
-				let index = this.$root.list.findIndex((item)=>item.id === id)
+				var index = this.$root.list.findIndex((item)=>item.id === id)
 				this.list[index].done = !this.list[index].done
+				var _this = this.$root
+				uni.request({
+					url: getApp().globalData.url + "switch",
+					method: "POST",
+					data: {
+						usr: getApp().globalData.usr,
+						pwd: getApp().globalData.pwd,
+						eventlis: {
+							id: _this.list[index].id,
+							done: _this.list[index].done
+						}
+					}
+				})
+			},
+			handleStart(event) {
+				this.$root.handleStart(event)
+			},
+			handlEnd(event) {
+				this.$root.handlEnd(event)
 			}
 		}
 	}
@@ -75,6 +96,18 @@
 				margin-right 15px
 				border-radius 50%
 				box-shadow 0 0 2px 2px #cccccc
+				flex-shrink 0
+			.todo-text
+				word-break: break-all;
+				white-space: normal;
+				width:auto
+				font-family Arial,Helvetica,sans-serif
+				font-size 14px
+				color:#5381ff;
+				font-weight 600
+				text-transform uppercase
+				
+				
 		.todo-content:after
 			position: absolute
 			top 0

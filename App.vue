@@ -1,7 +1,12 @@
 <script>
 	export default {
+		globalData: {
+			usr: '',
+			pwd: '',
+			url: ''
+		},
 		onLaunch: function() {
-			console.log('App Launch')
+			console.log("App Launch")
 		},
 		onShow: function() {
 			console.log('App Show')
@@ -13,18 +18,4 @@
 </script>
 
 <style>
-	/*每个页面公共css */
-	/* .uni-body {
-		background-image: url(./static/sky.jpg);
-		background-repeat: no-repeat;
-		background-size: 100% 100%;
-		background-attachment: fixed;
-		
-	} */
-	/* .uni-body {
-		height: 100%;
-	}
-	uni-page-body {
-		height: 100%;
-	} */
 </style>
