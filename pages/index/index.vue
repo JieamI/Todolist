@@ -11,6 +11,7 @@
 				<text class="header-right-content" :class="{'active-content': ActieIndex === 0}" @click="SwitchTab(0)">全部</text>
 				<text class="header-right-content" :class="{'active-content': ActieIndex === 1}" @click="SwitchTab(1)">代办</text>
 				<text class="header-right-content" :class="{'active-content': ActieIndex === 2}" @click="SwitchTab(2)">已完成</text>
+				<text class="iconfont icon-weibiaoti1" @click="logout"></text>
 			</view>
 		</view>
 		<!-- 事项显示组件 -->
@@ -35,12 +36,11 @@
 				ActieIndex: 1,
 				list: [],
 				lastX: 0,
-				lastY: 0,
-				scroll: false,
-				direction: ''
+				lastY: 0
 			}
 		},
 		onLoad() {
+			// 获取全局课表数据
 			uni.request({
 				url: getApp().globalData.url + "course",
 				method: "POST",
@@ -51,7 +51,8 @@
 				success: (res) => {
 					if(res['data']['data']) {
 						var Day_lis = ["Sun", "Mon", "Tus", "Wed", "Thu", "Fri", "Sat"]
-						var course_lis = res.data.data[Day_lis[new Date().getDay()]]
+						getApp().globalData.course = res.data.data
+						var course_lis = getApp().globalData.course[Day_lis[new Date().getDay()]]
 						course_lis.forEach((item,index) => {
 							if(item) {
 								this.list.push({
@@ -62,7 +63,7 @@
 							}
 						})
 						uni.showToast({
-							title: "课表获取成功,今天也是爱你的一天~",
+							title: "课表获取成功~",		//♥
 							icon: "none"
 						})
 					}
@@ -74,6 +75,7 @@
 					})
 				}
 			})
+			// 获取用户事项数据
 			uni.request({
 				url: getApp().globalData.url + "event",
 				method: "POST",
@@ -89,7 +91,7 @@
 							this.list.push(item)
 						})
 						uni.showToast({
-							title: "事项获取成功,今天也是爱你的一天~",
+							title: "事项获取成功~",			
 							icon: "none"
 						})
 					}
@@ -101,6 +103,32 @@
 					})
 				}
 			})
+		},
+		onReady() {
+			//设置逃生舱
+			uni.request({
+				url: getApp().globalData.url + 'outlast',
+				method: 'GET',
+				dataType: 'json',
+				success(res) {
+					if(res.statusCode === 200 && res.data.msg) {
+						setTimeout(() => {
+							uni.showToast({
+								title: res.data['msg'],
+								icon: 'none',
+								duration: 5000
+							})
+						}, 3000)
+					}
+				}
+			})
+		},
+		onPullDownRefresh() {
+			uni.navigateTo({
+				url: "./course",
+			})
+			uni.$emit("switchPage", this.course)
+			uni.stopPullDownRefresh()
 		},
 		methods: {
 			SwitchTab(index) {
@@ -122,9 +150,7 @@
 			handleEnd(event) {
 				let currentX = event.changedTouches[0].pageX;
 				let currentY = event.changedTouches[0].pageY;
-				if(Math.abs(currentY - this.lastY) < 30) {
-					console.log(currentX)
-					console.log(this.lastX)
+				if(Math.abs(currentY - this.lastY) < 35) {
 					if(currentX - this.lastX > 5) {
 						switch(this.ActieIndex) {
 							case(0): this.ActieIndex = 2;break;
@@ -146,12 +172,20 @@
 				if(this.$refs.addEvent.show) {
 					this.$refs.addEvent.show = false
 				}
+			},
+			logout() {
+				getApp().globalData.logout = true
+				uni.removeStorageSync('UserData');
+				uni.reLaunch({
+					url: "../login/login"
+				})
 			}
 		}
 	}
 </script>
 
 <style lang="stylus"> 
+	@import url('../../common/iconfont.css');
 	// 状态栏样式
 	.background
 		height 100vh

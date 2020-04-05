@@ -1,17 +1,35 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
 		{
+		    "path" : "pages/login/login",
+		    "style" : {
+				"navigationBarTitleText": "登录"
+			}
+		},
+		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "敲可爱的todo_list"
+				"navigationBarTitleText": "todoList",
+				"enablePullDownRefresh": true
 			}
-		}
+		},
+        {
+            "path" : "pages/index/course",
+            "style" : {
+				"navigationBarTitleText": "课程表",
+				"enablePullDownRefresh": true
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",
 		"navigationBarBackgroundColor": "#F8F8F8",
-		"backgroundColor": "#F8F8F8"
+		"backgroundColor": "#F8F8F8",
+		"app-plus": {
+			"animationType": "fade-in",
+			"animationDuration": 500
+		}
 	},
 	"condition" : { //模式配置，仅开发期间生效
 		"current": 0, //当前激活的模式(list 的索引项)

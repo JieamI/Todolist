@@ -3,9 +3,11 @@
 		globalData: {
 			usr: '',
 			pwd: '',
-			url: ''
+			url: 'http://172.81.204.128/',
+			course: {},
+			logout: false
 		},
-		onLaunch: function() {
+		onLaunch: function() {												
 			console.log("App Launch")
 		},
 		onShow: function() {

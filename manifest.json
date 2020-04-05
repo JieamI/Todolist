@@ -1,7 +1,7 @@
 {
     "name" : "WhutToDo",
-    "appid" : "__UNI__EA8EB8C",
-    "description" : "",
+    "appid" : "__UNI__675C858",
+    "description" : "Todolist for Whut",
     "versionName" : "1.0.0",
     "versionCode" : "100",
     "transformPx" : false,
@@ -12,7 +12,7 @@
         "compilerVersion" : 3,
         "splashscreen" : {
             "alwaysShowBeforeRender" : true,
-            "waiting" : true,
+            "waiting" : false,
             "autoclose" : true,
             "delay" : 0
         },
@@ -57,9 +57,18 @@
             },
             "splashscreen" : {
                 "android" : {
-                    "hdpi" : "unpackage/res/launchIcons/480762.png",
-                    "xhdpi" : "unpackage/res/launchIcons/7201242.png",
-                    "xxhdpi" : "unpackage/res/launchIcons/10801882.png"
+                    "hdpi" : "unpackage/res/launch/480762.png",
+                    "xhdpi" : "unpackage/res/launch/7201242.png",
+                    "xxhdpi" : "unpackage/res/launch/10801882.png"
+                },
+                "ios" : {
+                    "iphone" : {
+                        "portrait-896h@3x" : "unpackage/res/launch/12422688.png",
+                        "portrait-896h@2x" : "unpackage/res/launch/8281792.png",
+                        "iphonex" : "unpackage/res/launch/11252436.png",
+                        "retina55" : "unpackage/res/launch/12422208.png",
+                        "retina47" : "unpackage/res/launch/7501334.png"
+                    }
                 }
             },
             "icons" : {

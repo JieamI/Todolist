@@ -68,7 +68,7 @@
 				this.$root.handleStart(event)
 			},
 			handlEnd(event) {
-				this.$root.handlEnd(event)
+				this.$root.handleEnd(event)
 			}
 		}
 	}
@@ -106,8 +106,6 @@
 				color:#5381ff;
 				font-weight 600
 				text-transform uppercase
-				
-				
 		.todo-content:after
 			position: absolute
 			top 0
