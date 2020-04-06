@@ -46,15 +46,17 @@
 			// 获取本地用户信息，实现免登录
 			if(!getApp().globalData.logout) {
 				try {
-					getApp().globalData.usr = uni.getStorageSync('UserData')[0]
-					getApp().globalData.pwd = uni.getStorageSync('UserData')[1]
-					uni.showToast({
-						title: "本地缓存获取成功",
-						icon: "none",
-					})
-					uni.redirectTo({
-						url: '../index/index'
-					})
+					if(uni.getStorageSync('UserData')[0] && uni.getStorageSync('UserData')[1]) {
+						getApp().globalData.usr = uni.getStorageSync('UserData')[0]
+						getApp().globalData.pwd = uni.getStorageSync('UserData')[1]
+						uni.showToast({
+							title: "本地缓存获取成功",
+							icon: "none",
+						})
+						uni.redirectTo({
+							url: '../index/index'
+						})
+					}
 				}catch (e) {
 					console.log(e)
 					uni.showToast({
