@@ -50,7 +50,7 @@
 				},
 				success: (res) => {
 					if(res['data']['data']) {
-						var Day_lis = ["Sun", "Mon", "Tus", "Wed", "Thu", "Fri", "Sat"]
+						var Day_lis = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"]
 						getApp().globalData.course = res.data.data
 						var course_lis = getApp().globalData.course[Day_lis[new Date().getDay()]]
 						course_lis.forEach((item,index) => {
